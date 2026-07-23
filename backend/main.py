@@ -1,27 +1,37 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import os
 import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-# Download VADER lexicon
+# Download VADER lexicon to writable /tmp directory for Vercel serverless
+nltk_data_dir = os.path.join('/tmp', 'nltk_data')
+os.makedirs(nltk_data_dir, exist_ok=True)
+nltk.data.path.insert(0, nltk_data_dir)
+
 try:
     nltk.data.find('sentiment/vader_lexicon.zip')
 except LookupError:
-    nltk.download('vader_lexicon')
+    nltk.download('vader_lexicon', download_dir=nltk_data_dir)
 
 app = FastAPI(title="Sentiment Analysis API")
 
-# Enable CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-analyzer = SentimentIntensityAnalyzer()
+analyzer = None
+
+def get_analyzer():
+    global analyzer
+    if analyzer is None:
+        from nltk.sentiment.vader import SentimentIntensityAnalyzer
+        analyzer = SentimentIntensityAnalyzer()
+    return analyzer
 
 class AnalysisRequest(BaseModel):
     text: str
@@ -31,16 +41,16 @@ class AnalysisResponse(BaseModel):
     polarity: float
     scores: dict
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {"message": "Sentiment Analysis API is running"}
 
-@app.post("/analyze", response_model=AnalysisResponse)
+@app.post("/api/analyze", response_model=AnalysisResponse)
 async def analyze_sentiment(request: AnalysisRequest):
     if not request.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
     
-    scores = analyzer.polarity_scores(request.text)
+    scores = get_analyzer().polarity_scores(request.text)
     compound = scores['compound']
     
     if compound >= 0.05:
@@ -55,7 +65,3 @@ async def analyze_sentiment(request: AnalysisRequest):
         "polarity": compound,
         "scores": scores
     }
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
