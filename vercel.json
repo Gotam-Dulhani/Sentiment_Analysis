@@ -12,7 +12,7 @@
   },
   "rewrites": [
     {
-      "source": "/api(/.*)?",
+      "source": "/analyze",
       "destination": {
         "type": "service",
         "service": "backend"

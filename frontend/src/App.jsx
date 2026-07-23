@@ -18,7 +18,7 @@ function App() {
     setError(null)
     
     try {
-      const response = await axios.post('http://localhost:8000/analyze', { text })
+      const response = await axios.post('/analyze', { text })
       setResult(response.data)
     } catch (err) {
       setError('Could not reach the analysis server. Make sure the backend is running.')
