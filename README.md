@@ -1,4 +1,4 @@
-# 🌟 Sentiment Analysis Web Application
+# Sentiment Analysis Web Application
 
 [![Contributors](https://img.shields.io/github/contributors/Gotam-Dulhani/Sentiment-Analysis)](https://github.com/Gotam-Dulhani/Sentiment-Analysis/graphs/contributors)
 [![Forks](https://img.shields.io/github/forks/Gotam-Dulhani/Sentiment-Analysis)](https://github.com/Gotam-Dulhani/Sentiment-Analysis/network/members)
@@ -8,92 +8,97 @@
 
 > A **full-stack Sentiment Analysis Web Application** with an interactive dashboard that classifies text as **Positive**, **Negative**, or **Neutral** in real-time.
 
+---
+
+## Table of Contents
+
+* [About The Project](#about-the-project)
+* [Key Features](#key-features)
+* [Built With](#built-with)
+* [Getting Started](#getting-started)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Deployment](#deployment)
+* [System Architecture](#system-architecture)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
 
 ---
 
-## 📌 Table of Contents
-
-* [About The Project](#-about-the-project)
-* [Key Features](#-key-features)
-* [Built With](#-built-with)
-* [Getting Started](#-getting-started)
-* [Installation](#-installation)
-* [Usage](#-usage)
-* [System Architecture](#-system-architecture)
-* [Contributing](#-contributing)
-* [Contributors](#-contributors)
-* [License](#-license)
-* [Contact](#-contact)
-* [Acknowledgments](#-acknowledgments)
-
----
-
-## 💡 About The Project
+## About The Project
 
 The **Sentiment Analysis Web Application** allows users to analyze the emotional tone of any text using **Natural Language Processing (NLP)**.
 
 Users can paste **reviews, feedback, or social media posts** and instantly get:
 
-* ✅ Sentiment category
-* 📊 Compound polarity score
-* 📈 Visual distribution via interactive charts
+* Sentiment category (Positive, Negative, Neutral)
+* Compound polarity score
+* Visual distribution via interactive pie/donut charts
 
 **Technologies showcased in this project:**
 
-* NLP and Machine Learning
+* NLP and Machine Learning (VADER Sentiment Analyzer)
 * REST API backend with FastAPI
 * Interactive frontend dashboards with React & Recharts
 * Real-time sentiment scoring
+* Deployed on Vercel as a monorepo (Vite + FastAPI)
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-* **Real-Time Analysis** – Instantly classify text sentiment.
-* **Interactive Charts** – Pie/Donut visualizations of Positive, Neutral, Negative distributions.
-* **Modern UI** – Glassmorphism design, responsive layout, smooth animations.
-* **Fast Backend** – Powered by **FastAPI** and asynchronous Python processing.
-* **Error Handling** – Handles empty inputs or API failures gracefully.
-* **Scalable Architecture** – Modular, easy to expand with advanced ML models.
+* **Real-Time Analysis** - Instantly classify text sentiment.
+* **Interactive Charts** - Pie/Donut visualizations of Positive, Neutral, Negative distributions.
+* **Modern UI** - Glassmorphism design, responsive layout, smooth animations.
+* **Fast Backend** - Powered by **FastAPI** and asynchronous Python processing.
+* **Error Handling** - Handles empty inputs or API failures gracefully.
+* **Vercel Deployment** - Deployed as a monorepo with Vite frontend and FastAPI backend services.
 
 ---
 
-## 🛠 Built With
+## Built With
 
 ### Backend
 
 | Technology | Purpose |
 |---|---|
-| Python 3.8+ | Core language |
+| Python 3.12+ | Core language |
 | FastAPI | REST API framework |
 | NLTK (VADER) | Sentiment analysis |
-| Uvicorn | ASGI server |
 | Pydantic | Data validation |
 
 ### Frontend
 
 | Technology | Purpose |
 |---|---|
-| React | UI framework |
-| Vite | Build tool |
+| React 19 | UI framework |
+| Vite 7 | Build tool |
 | Axios | HTTP client |
 | Recharts | Data visualization |
 | Framer Motion | Animations |
 | Lucide React | Icons |
 
+### Deployment
+
+| Technology | Purpose |
+|---|---|
+| Vercel | Hosting & serverless functions |
+| Vercel Services | Monorepo deployment (Vite + FastAPI) |
+
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-* Python 3.8+
-* Node.js & npm
+* Python 3.12+
+* Node.js 18+ & npm
 * Git
 
 ---
 
-## 💾 Installation
+## Installation
 
 ### Clone the Repository
 
@@ -124,11 +129,11 @@ npm run dev
 
 ---
 
-## 📝 Usage
+## Usage
 
 1. Open the frontend application in your browser.
 2. Enter or paste text into the input box.
-3. Click **Analyze**.
+3. Click **Analyze Sentiment**.
 4. View the sentiment results & interactive charts.
 
 **Example Input:**
@@ -140,7 +145,7 @@ This product is amazing! I love the quality and the design.
 **Example Output:**
 
 ```
-Sentiment:       Positive ✅
+Sentiment:       Positive
 Compound Score:  0.82
 Positive:        0.78
 Neutral:         0.22
@@ -149,24 +154,98 @@ Negative:        0.00
 
 ---
 
-## 🏗 System Architecture
+## Deployment
+
+### Deploy on Vercel
+
+This project is configured for Vercel deployment as a monorepo using **Vercel Services**.
+
+#### Project Structure
+
+```
+Sentiment_Analysis/
+├── frontend/          # Vite + React SPA
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── backend/           # FastAPI serverless functions
+│   ├── main.py
+│   ├── pyproject.toml
+│   └── requirements.txt
+└── vercel.json        # Vercel Services configuration
+```
+
+#### Vercel Configuration
+
+The `vercel.json` uses Vercel Services to deploy both the frontend and backend as a single project:
+
+```json
+{
+  "services": {
+    "frontend": {
+      "root": "frontend/",
+      "framework": "vite"
+    },
+    "backend": {
+      "root": "backend/",
+      "entrypoint": "main:app"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
+  ]
+}
+```
+
+#### Deploy Steps
+
+1. Push your code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new)
+3. Import your GitHub repository
+4. Vercel will auto-detect the configuration
+5. Click **Deploy**
+
+#### API Endpoints (Production)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api` | Health check |
+| POST | `/api/analyze` | Analyze text sentiment |
+
+---
+
+## System Architecture
 
 ```
 User Input (React UI)
-        │
-        ▼
-Axios HTTP Request
-        │
-        ▼
-FastAPI Backend
-        │
-        ▼
+        |
+        v
+Axios HTTP Request (/api/analyze)
+        |
+        v
+Vercel Services Routing
+        |
+        v
+FastAPI Backend (Serverless Function)
+        |
+        v
 NLTK VADER Sentiment Analyzer
-        │
-        ▼
+        |
+        v
 JSON Response
-        │
-        ▼
+        |
+        v
 React Dashboard + Charts
 ```
 
@@ -174,13 +253,13 @@ React Dashboard + Charts
 
 | Compound Score | Sentiment |
 |---|---|
-| ≥ 0.05 | 🟢 Positive |
-| ≤ -0.05 | 🔴 Negative |
-| -0.05 to 0.05 | 🟡 Neutral |
+| >= 0.05 | Positive |
+| <= -0.05 | Negative |
+| -0.05 to 0.05 | Neutral |
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
@@ -207,29 +286,24 @@ git push origin feature/AmazingFeature
 
 ---
 
-## 👤 Contributors
-
-**Gotam Dulhani** – Project Development & Implementation
-
----
-
-## 📝 License
+## License
 
 Distributed under the **MIT License**. See `LICENSE` for details.
 
 ---
 
-## 📫 Contact
+## Contact
 
 **Gotam Dulhani**
 GitHub: [https://github.com/Gotam-Dulhani/Sentiment-Analysis](https://github.com/Gotam-Dulhani/Sentiment-Analysis)
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 * [NLTK Natural Language Toolkit](https://www.nltk.org/)
 * [FastAPI Documentation](https://fastapi.tiangolo.com/)
 * [React Documentation](https://react.dev/)
 * [Recharts Visualization Library](https://recharts.org/)
-* Open Source Community ❤️
+* [Vercel Documentation](https://vercel.com/docs)
+* [Vercel Services](https://vercel.com/docs/services)
